@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+						http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+            			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd 
+                        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+                        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+         					"
+	default-autowire="byName">
+
+	<import resource="classpath:/META-INF/applicationContext-batch.xml" />
+	<import resource="classpath:/META-INF/applicationContext-data-access.xml" />
+
+	<bean id="cmisConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="placeholderPrefix" value="$cmis{" />
+		<property name="placeholderSuffix" value="}" />
+		<property name="locations"
+			value="classpath:/META-INF/dcma-cmis/dcma-cmis.properties">
+		</property>
+	</bean>
+
+	<bean id="cmisExporter" class="com.ephesoft.dcma.cmis.CMISExporter"		
+		p:repoCreateBatchFolder="$cmis{cmis.repo.create_batch_subfolders}">		
+	</bean>
+	
+	<bean id="urlService" class="com.ephesoft.dcma.cmis.URLService"
+		p:urlAclService="$cmis{cmis.url.acl_service}"
+		p:urlDiscoveryService="$cmis{cmis.url.discovery_service}"
+		p:urlMultifilingService="$cmis{cmis.url.multifiling_service}"
+		p:urlNavigationService="$cmis{cmis.url.navigation_service}"
+		p:urlObjectService="$cmis{cmis.url.object_service}"
+		p:urlPolicyService="$cmis{cmis.url.policy_service}"
+		p:urlRelationshipService="$cmis{cmis.url.relationship_service}"
+		p:urlRepositoryService="$cmis{cmis.url.repository_service}"
+		p:urlVersioningService="$cmis{cmis.url.versioning_service}">
+	</bean>
+	
+	<bean id="documentDetails" class="com.ephesoft.dcma.cmis.CMISDocumentDetails"
+		p:pluginMappingFileName="$cmis{cmis.plugin_mapping_file_name}"
+		p:documentVersioningState="$cmis{cmis.document_versioning_state}"
+		p:dateFormat="$cmis{cmis.date_format}"
+		p:aspectMappingFileName="$cmis{cmis.aspect_mapping_file_name}">
+	</bean>
+	
+	<bean id="cmisFactory"
+		class="com.ephesoft.dcma.cmis.factory.CMISSessionFactory"
+		p:sessionType="$cmis{cmis.security.mode}">
+	</bean>
+	
+	<bean id="cmisExportService" class="com.ephesoft.dcma.cmis.service.CMISExportServiceImpl" />
+
+	<context:component-scan base-package="com.ephesoft.dcma.cmis" />
+	<context:component-scan base-package="com.ephesoft.dcma.cmis.service" />
+	<context:component-scan base-package="com.ephesoft.dcma.cmis.impl" />
+	<context:component-scan base-package="com.ephesoft.dcma.cmis.factory" />
+</beans>
