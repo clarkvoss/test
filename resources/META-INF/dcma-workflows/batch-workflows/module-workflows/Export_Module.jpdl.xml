@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<process name="Export_Module" xmlns="http://jbpm.org/4.3/jpdl">
+
+	<start g="16,25,80,40">
+		<transition to="Export_Scripting_Plugin" />
+	</start>
+
+	<sub-process continue="async" g="128,16,201,59" name="Export_Scripting_Plugin"
+		sub-process-key="Export_Scripting_Plugin">
+		<parameter-in subvar="batchInstanceID" var="batchInstanceID" />
+		<parameter-in expr="Export_Module_Scripting_Plugin"
+			subvar="backUpFileName" />
+		<parameter-in expr="ScriptExport" subvar="scriptName" />
+		<transition to="Image_Process_CreateMultiPage_Files_Plugin" />
+	</sub-process>
+
+	<sub-process continue="async" g="361,16,252,59"
+		name="Image_Process_CreateMultiPage_Files_Plugin" sub-process-key="Image_Process_CreateMultiPage_Files_Plugin">
+		<parameter-in subvar="batchInstanceID" var="batchInstanceID" />
+		<transition to="CSV_File_Creation_Plugin" />
+	</sub-process>
+
+	<sub-process continue="async" g="645,16,176,59" name="CSV_File_Creation_Plugin"
+		sub-process-key="CSV_File_Creation_Plugin">
+		<parameter-in subvar="batchInstanceID" var="batchInstanceID" />
+		<transition to="Tabbed_Pdf_Plugin" />
+	</sub-process>
+
+	<sub-process continue="async" g="645,16,176,59" name="Tabbed_Pdf_Plugin"
+		sub-process-key="Tabbed_Pdf_Plugin">
+		<parameter-in subvar="batchInstanceID" var="batchInstanceID" />
+		<transition to="IBM_CM_Plugin" />
+	</sub-process>
+
+	<sub-process continue="async" g="645,16,176,59" name="IBM_CM_Plugin"
+		sub-process-key="IBM_CM_Plugin">
+		<parameter-in subvar="batchInstanceID" var="batchInstanceID" />
+		<transition to="Copy_Batch_XML_Files_Plugin" />
+	</sub-process>
+
+	<sub-process continue="async" g="645,16,176,59"
+		name="Copy_Batch_XML_Files_Plugin" sub-process-key="Copy_Batch_XML_Files_Plugin">
+		<parameter-in subvar="batchInstanceID" var="batchInstanceID" />
+		<transition to="Docushare_Export_Plugin" />
+	</sub-process>
+
+	<sub-process continue="async" g="853,16,176,59" name="Docushare_Export_Plugin"
+		sub-process-key="Docushare_Export_Plugin">
+		<parameter-in subvar="batchInstanceID" var="batchInstanceID" />
+		<transition to="CMIS_Export_Plugin" />
+	</sub-process>
+
+	<sub-process continue="async" g="853,16,176,59" name="NSI_Export_Plugin"
+		sub-process-key="NSI_Export_Plugin">
+		<parameter-in subvar="batchInstanceID" var="batchInstanceID" />
+		<transition to="Key_Value_Learning_Plugin" />
+	</sub-process>
+
+	<sub-process continue="async" g="1061,16,176,59" name="CMIS_Export_Plugin"
+		sub-process-key="CMIS_Export_Plugin">
+		<parameter-in subvar="batchInstanceID" var="batchInstanceID" />
+		<transition to="Export_Box_Plugin" />
+	</sub-process>
+
+	<sub-process continue="async" g="1061,16,176,59" name="Export_Box_Plugin"
+		sub-process-key="Export_Box_Plugin">
+		<parameter-in subvar="batchInstanceID" var="batchInstanceID" />
+		<transition to="Filebound_Export_Plugin" />
+	</sub-process>
+
+	<sub-process continue="async" g="1269,16,176,59" name="Filebound_Export_Plugin"
+		sub-process-key="Filebound_Export_Plugin">
+		<parameter-in subvar="batchInstanceID" var="batchInstanceID" />
+		<transition to="NSI_Export_Plugin" />
+	</sub-process>
+
+	<sub-process continue="async" g="1269,16,176,59" name="Key_Value_Learning_Plugin"
+		sub-process-key="Key_Value_Learning_Plugin">
+		<parameter-in subvar="batchInstanceID" var="batchInstanceID" />
+		<transition to="Db_Export_Plugin" />
+	</sub-process>
+
+	<sub-process continue="async" g="62,107,176,59" name="Db_Export_Plugin"
+		sub-process-key="Db_Export_Plugin">
+		<parameter-in subvar="batchInstanceID" var="batchInstanceID" />
+		<transition to="Automatic_Learning_Classification_Plugin" />
+	</sub-process>
+
+	<sub-process continue="async" g="62,107,176,59"
+		name="Automatic_Learning_Classification_Plugin" sub-process-key="Automatic_Learning_Classification_Plugin">
+		<parameter-in subvar="batchInstanceID" var="batchInstanceID" />
+		<transition to="CleanUp_Plugin" />
+	</sub-process>
+	
+	<sub-process continue="async" g="1477,16,176,59" name="CleanUp_Plugin"
+		sub-process-key="CleanUp_Plugin">
+		<parameter-in subvar="batchInstanceID" var="batchInstanceID" />
+		<transition to="end" />
+	</sub-process>
+
+	<end g="1685,25,80,40" name="end" />
+</process>
